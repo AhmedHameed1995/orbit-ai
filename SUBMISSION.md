@@ -2,8 +2,8 @@
 
 ## Links
 
-- **Live product:** https://orbit-meeting-intelligence.cheery-grape-5370.chatgpt.site
-- **Signed-out share view:** https://orbit-meeting-intelligence.cheery-grape-5370.chatgpt.site/?share=atlas-q3
+- **Live product:** https://ahmedhameed1995.github.io/orbit-ai/
+- **Signed-out share view:** https://ahmedhameed1995.github.io/orbit-ai/?share=atlas-q3
 - **Public repository:** https://github.com/AhmedHameed1995/orbit-ai
 
 ## Walkthrough
