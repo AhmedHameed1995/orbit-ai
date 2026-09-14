@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+dist/
+build/
+.env
+.env.local
+.env*.local
+.DS_Store
+*.log
+.vercel
+
+# NOTE: .agent-logs/ is deliberately NOT ignored. It ships with the repo
+# as part of the 8x assignment submission.
