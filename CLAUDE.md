@@ -61,6 +61,6 @@ will not fire them.
 
 ## TODO
 
-- [ ] Set `git config agentlog.author <github-handle>` — currently falls back to `user.name`
-- [ ] Run the two canary tests and write `CAPTURE-TEST.md`
-- [ ] Then build
+- [x] Set `git config agentlog.author <github-handle>` — set to `ahmed1995`
+- [x] Run the two canary tests and write `CAPTURE-TEST.md`
+- [x] Then build

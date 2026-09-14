@@ -4,7 +4,7 @@
 
 - **Live product:** https://orbit-meeting-intelligence.cheery-grape-5370.chatgpt.site
 - **Signed-out share view:** https://orbit-meeting-intelligence.cheery-grape-5370.chatgpt.site/?share=atlas-q3
-- **Public repository:** TODO — requires the owner's GitHub authentication
+- **Public repository:** https://github.com/AhmedHameed1995/orbit-ai
 
 ## Walkthrough
 
@@ -19,5 +19,5 @@
 - [x] Eight-person, one-hour call is included
 - [x] Production build passes
 - [x] `.agent-logs/` is tracked in Git
-- [ ] Repository published publicly
+- [x] Repository published publicly
 - [ ] Camera-on walkthrough recorded and linked
