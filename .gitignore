@@ -8,6 +8,7 @@ build/
 .env*.local
 .DS_Store
 *.log
+*.tsbuildinfo
 .vercel
 
 # NOTE: .agent-logs/ is deliberately NOT ignored. It ships with the repo
