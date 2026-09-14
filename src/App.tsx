@@ -239,7 +239,7 @@ function MeetingDetail({ meeting, onBack }: { meeting: Meeting; onBack: () => vo
       </section>
       <aside className="right-rail">
         <PeoplePanel people={meeting.people} />
-        <ActionPanel actions={actions} setActions={setActions} seek={seek} />
+        <ActionPanel actions={actions} setActions={setActions} seek={seek} people={meeting.people} current={current} notify={notify} />
         <ClipsPanel clips={clips} seek={seek} />
       </aside>
     </div>
@@ -268,13 +268,16 @@ function Summary({ template, setTemplate, seek, notify }: { template: string; se
 }
 
 function Transcript({ current, seek, addClip, containerRef, notify }: { current: number; seek: (n: number) => void; addClip: (s: Segment) => void; containerRef: React.RefObject<HTMLDivElement | null>; notify: (m: string) => void }) {
+  const [query, setQuery] = useState('');
+  const term = query.trim().toLowerCase();
+  const visible = term ? transcript.filter((s) => s.text.toLowerCase().includes(term) || s.speaker.toLowerCase().includes(term)) : transcript;
   const copyTranscript = async () => {
-    const body = transcript.map((segment) => `${fmt(segment.at)}  ${segment.speaker}: ${segment.text}`).join('\n');
-    notify(await copyText(body) ? 'Transcript copied to clipboard' : 'Your browser blocked the copy');
+    const body = visible.map((segment) => `${fmt(segment.at)}  ${segment.speaker}: ${segment.text}`).join('\n');
+    notify(await copyText(body) ? `${term ? visible.length + ' matching lines' : 'Transcript'} copied to clipboard` : 'Your browser blocked the copy');
   };
   return <div className="tab-panel transcript-panel" ref={containerRef}>
-    <div className="panel-toolbar"><label><Search size={15} /><input placeholder="Search this transcript" /></label><button onClick={copyTranscript}><Clipboard size={15} /> Copy transcript</button></div>
-    <div className="transcript-list">{transcript.map((segment) => { const p = personFor(segment.speaker); const active = current >= segment.at && current < segment.at + 90; return <div key={segment.at} className={`segment ${active ? 'active' : ''}`} onClick={() => seek(segment.at)}><button className="add-highlight" title="Save this moment" onClick={(e) => { e.stopPropagation(); addClip(segment); }}><Plus size={14} /></button><Avatar person={p} small /><div><div className="segment-meta"><strong>{segment.speaker}</strong><button>{fmt(segment.at)}</button>{segment.key && <span><Highlighter size={11} /> Key moment</span>}</div><p>{segment.text}</p></div></div>; })}</div>
+    <div className="panel-toolbar"><label><Search size={15} /><input placeholder="Search this transcript" value={query} onChange={(e) => setQuery(e.target.value)} />{term && <button className="clear-search" title="Clear search" onClick={() => setQuery('')}><X size={13} /></button>}</label>{term && <span className="filter-count">{visible.length} of {transcript.length}</span>}<button onClick={copyTranscript}><Clipboard size={15} /> Copy transcript</button></div>
+    <div className="transcript-list">{visible.map((segment) => { const p = personFor(segment.speaker); const active = current >= segment.at && current < segment.at + 90; return <div key={segment.at} className={`segment ${active ? 'active' : ''}`} onClick={() => seek(segment.at)}><button className="add-highlight" title="Save this moment" onClick={(e) => { e.stopPropagation(); addClip(segment); }}><Plus size={14} /></button><Avatar person={p} small /><div><div className="segment-meta"><strong>{segment.speaker}</strong><button>{fmt(segment.at)}</button>{segment.key && <span><Highlighter size={11} /> Key moment</span>}</div><p>{segment.text}</p></div></div>; })}{term && !visible.length && <p className="panel-empty">No lines match “{query}”.</p>}</div>
   </div>;
 }
 
@@ -290,9 +293,26 @@ function PeoplePanel({ people: list }: { people: Person[] }) {
   return <section className="rail-card people-card"><div className="rail-title"><h3>People <span>{list.length}</span></h3><button onClick={() => setExpanded(!expanded)}>{expanded ? 'Hide' : 'View all'}</button></div><div className="company-split"><div><i style={{ width: '63%' }} /><span>Northstar 63%</span></div><div><i style={{ width: '37%' }} /><span>Atlas 37%</span></div></div>{(expanded ? list : list.slice(0, 4)).map((p) => <div className="person-row" key={p.name}><Avatar person={p} small /><div><strong>{p.name}</strong><small>{p.role}</small></div><span>{p.talk}%</span></div>)}</section>;
 }
 
-function ActionPanel({ actions, setActions, seek }: { actions: Action[]; setActions: (a: Action[]) => void; seek: (n: number) => void }) {
+function ActionPanel({ actions, setActions, seek, people: list, current, notify }: { actions: Action[]; setActions: (a: Action[]) => void; seek: (n: number) => void; people: Person[]; current: number; notify: (m: string) => void }) {
+  const [adding, setAdding] = useState(false);
+  const [draft, setDraft] = useState('');
+  const [owner, setOwner] = useState(list[0].name.split(' ')[0]);
   const toggle = (id: number) => setActions(actions.map((a) => a.id === id ? { ...a, done: !a.done } : a));
-  return <section className="rail-card"><div className="rail-title"><h3>Action items <span>{actions.filter((a) => !a.done).length}</span></h3><button><Copy size={14} /></button></div><div className="action-list">{actions.map((a) => <div className={`action ${a.done ? 'done' : ''}`} key={a.id}><button className="check" onClick={() => toggle(a.id)}>{a.done && <Check size={13} />}</button><div><p>{a.text}</p><span><b>{a.owner}</b><button onClick={() => seek(a.at)}><Play size={9} fill="currentColor" /> {fmt(a.at)}</button></span></div></div>)}</div><button className="add-action"><Plus size={14} /> Add action item</button></section>;
+  const cancel = () => { setAdding(false); setDraft(''); };
+  const submit = () => {
+    const text = draft.trim();
+    if (!text) return;
+    setActions([...actions, { id: Date.now(), text, owner, at: current }]);
+    cancel();
+    notify(`Action item assigned to ${owner}`);
+  };
+  const copyActions = async () => {
+    const body = actions.map((a) => `[${a.done ? 'x' : ' '}] ${a.text} — ${a.owner} (${fmt(a.at)})`).join('\n');
+    notify(await copyText(body) ? 'Action items copied to clipboard' : 'Your browser blocked the copy');
+  };
+  return <section className="rail-card"><div className="rail-title"><h3>Action items <span>{actions.filter((a) => !a.done).length}</span></h3><button title="Copy action items" onClick={copyActions}><Copy size={14} /></button></div><div className="action-list">{actions.map((a) => <div className={`action ${a.done ? 'done' : ''}`} key={a.id}><button className="check" onClick={() => toggle(a.id)}>{a.done && <Check size={13} />}</button><div><p>{a.text}</p><span><b>{a.owner}</b><button onClick={() => seek(a.at)}><Play size={9} fill="currentColor" /> {fmt(a.at)}</button></span></div></div>)}</div>{adding
+    ? <div className="action-compose"><input autoFocus value={draft} placeholder="What needs to happen?" onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') submit(); if (e.key === 'Escape') cancel(); }} /><div><select value={owner} onChange={(e) => setOwner(e.target.value)}>{list.map((p) => <option key={p.name}>{p.name.split(' ')[0]}</option>)}</select><span>at {fmt(current)}</span><button className="compose-add" onClick={submit}>Add</button><button className="compose-cancel" onClick={cancel}><X size={13} /></button></div></div>
+    : <button className="add-action" onClick={() => setAdding(true)}><Plus size={14} /> Add action item</button>}</section>;
 }
 
 function ClipsPanel({ clips, seek }: { clips: { id: number; at: number; title: string; length: number }[]; seek: (n: number) => void }) {
