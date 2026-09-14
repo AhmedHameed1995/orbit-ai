@@ -16,7 +16,7 @@ type Meeting = {
 };
 
 const people: Person[] = [
-  { name: 'Maya Chen', role: 'VP Product · Northstar', initials: 'MC', color: '#b999ff', talk: 24 },
+  { name: 'Ahmed Chen', role: 'VP Product · Northstar', initials: 'AC', color: '#b999ff', talk: 24 },
   { name: 'Noah Williams', role: 'Engineering Lead · Northstar', initials: 'NW', color: '#59c7f0', talk: 19 },
   { name: 'Priya Shah', role: 'Design Director · Northstar', initials: 'PS', color: '#ffb35c', talk: 15 },
   { name: 'Leo Martinez', role: 'Customer Success · Northstar', initials: 'LM', color: '#80dca8', talk: 13 },
@@ -30,13 +30,13 @@ const meetings: Meeting[] = [
   { id: 'atlas-q3', title: 'Atlas Labs · Q3 implementation review', company: 'Atlas Labs', date: 'Today', time: '10:00 AM', duration: 3728, type: 'Customer success', people, preview: 'Launch remains on track for October 14. Security review is the only critical dependency.', sentiment: 'Positive', starred: true },
   { id: 'weekly-product', title: 'Weekly product & design sync', company: 'Northstar', date: 'Yesterday', time: '2:30 PM', duration: 2864, type: 'Project update', people: people.slice(0, 5), preview: 'Aligned on the activation redesign, experiment guardrails, and research plan for next week.', sentiment: 'Aligned' },
   { id: 'helio-discovery', title: 'Helio · Discovery call', company: 'Helio Systems', date: 'Sep 11', time: '4:00 PM', duration: 1938, type: 'Sales', people: people.slice(2, 6), preview: 'Helio needs SSO and audit-log coverage before their procurement review in November.', sentiment: 'Promising' },
-  { id: 'maya-one-one', title: 'Maya / Noah 1:1', company: 'Northstar', date: 'Sep 10', time: '11:30 AM', duration: 2441, type: 'One-on-one', people: people.slice(0, 2), preview: 'Discussed team load, staff engineer hiring, and ownership for the reliability roadmap.', sentiment: 'Candid' },
+  { id: 'ahmed-one-one', title: 'Ahmed / Noah 1:1', company: 'Northstar', date: 'Sep 10', time: '11:30 AM', duration: 2441, type: 'One-on-one', people: people.slice(0, 2), preview: 'Discussed team load, staff engineer hiring, and ownership for the reliability roadmap.', sentiment: 'Candid' },
   { id: 'q4-kickoff', title: 'Q4 launch kickoff', company: 'Northstar', date: 'Sep 8', time: '9:00 AM', duration: 3295, type: 'Project kick-off', people: people.slice(0, 7), preview: 'Defined launch outcomes, workstream owners, and a weekly risk review through general availability.', sentiment: 'Focused' },
   { id: 'redwood-retro', title: 'Redwood migration retrospective', company: 'Redwood Health', date: 'Sep 4', time: '3:00 PM', duration: 3140, type: 'Retrospective', people: people.slice(1, 8), preview: 'The phased rollout worked; earlier sandbox access would have prevented the final integration crunch.', sentiment: 'Constructive' },
 ];
 
 const transcript: Segment[] = [
-  { at: 12, speaker: 'Maya Chen', text: 'Thanks, everyone. The goal today is to leave with confidence on the October launch and make every remaining dependency explicit.' },
+  { at: 12, speaker: 'Ahmed Chen', text: 'Thanks, everyone. The goal today is to leave with confidence on the October launch and make every remaining dependency explicit.' },
   { at: 58, speaker: 'Sofia Kim', text: 'From our side, adoption looks healthy. Operations has 42 pilot users active, and the weekly completion rate moved from 61 to 78 percent.' },
   { at: 174, speaker: 'Leo Martinez', text: 'That matches what we see. The strongest behavior is teams returning to the same workspace, not just completing onboarding once.' },
   { at: 318, speaker: 'Priya Shah', text: 'The mobile handoff is still the rough edge. We can simplify the last confirmation step without changing the October scope.' },
@@ -44,7 +44,7 @@ const transcript: Segment[] = [
   { at: 612, speaker: 'Jon Bell', text: 'I have one open item: evidence for the ninety-day audit log retention. If that lands by Thursday, security review stays on schedule.', key: true },
   { at: 791, speaker: 'Noah Williams', text: 'We can deliver the retention export tomorrow. The implementation is already live behind the Atlas flag; it only needs the evidence bundle.' },
   { at: 968, speaker: 'Amara Okafor', text: 'Training is booked for October 7 and 9. Can we make the second session a recording for people in APAC?' },
-  { at: 1124, speaker: 'Maya Chen', text: 'Yes. Leo will own the recording and a short admin guide. Let’s also create a two-minute setup clip instead of sending a long document.' },
+  { at: 1124, speaker: 'Ahmed Chen', text: 'Yes. Leo will own the recording and a short admin guide. Let’s also create a two-minute setup clip instead of sending a long document.' },
   { at: 1355, speaker: 'Sofia Kim', text: 'That would help. The champion group is confident, but managers want a clearer way to see adoption without asking us for exports.' },
   { at: 1576, speaker: 'Priya Shah', text: 'The new workspace health panel solves most of that. I’ll share the interactive prototype today and collect feedback async.' },
   { at: 1812, speaker: 'Ethan Brooks', text: 'For provisioning, the last decision is whether contractors live in a separate group. I will confirm that with identity by Friday.' },
@@ -52,7 +52,7 @@ const transcript: Segment[] = [
   { at: 2368, speaker: 'Sofia Kim', text: 'Let’s take that recommendation. The broader question is launch support—what happens if a region hits an issue in its first shift?' },
   { at: 2591, speaker: 'Leo Martinez', text: 'We will run a shared launch channel for the first week, with a named support lead in US and EU hours and a four-hour response target.', key: true },
   { at: 2910, speaker: 'Amara Okafor', text: 'Perfect. I’ll publish the escalation tree with regional leads once you send the channel details.' },
-  { at: 3248, speaker: 'Maya Chen', text: 'I’m hearing one critical path—security evidence by Thursday—and three follow-ups that do not threaten the date.' },
+  { at: 3248, speaker: 'Ahmed Chen', text: 'I’m hearing one critical path—security evidence by Thursday—and three follow-ups that do not threaten the date.' },
   { at: 3556, speaker: 'Jon Bell', text: 'Correct. Assuming the evidence matches what we reviewed, I can return final approval by Monday afternoon.' },
   { at: 3692, speaker: 'Sofia Kim', text: 'Great. October 14 stays the date. Thanks all—this is the clearest the plan has felt.' },
 ];
@@ -154,7 +154,7 @@ function Sidebar({ view, onHome }: { view: string; onHome: () => void }) {
     <div className="sidebar-bottom">
       <div className="usage"><div><Sparkles size={15} /> AI minutes</div><strong>214 <span>/ 300</span></strong><div className="meter"><i /></div><small>Resets in 12 days</small></div>
       <button><Settings size={18} /><span>Settings</span></button>
-      <div className="user-row"><Avatar person={people[0]} small /><div><strong>Maya Chen</strong><small>Northstar Labs</small></div><MoreHorizontal size={18} /></div>
+      <div className="user-row"><Avatar person={people[0]} small /><div><strong>Ahmed Chen</strong><small>Northstar Labs</small></div><MoreHorizontal size={18} /></div>
     </div>
   </aside>;
 }
@@ -172,7 +172,7 @@ function MeetingList({ onOpen, query, setQuery }: { onOpen: (m: Meeting) => void
   const filtered = meetings.filter((m) => `${m.title} ${m.company} ${m.preview} ${m.type}`.toLowerCase().includes(query.toLowerCase()) && (filter === 'All meetings' || m.type === filter));
   return <div className="page list-page">
     <section className="welcome">
-      <div><p className="eyebrow">MONDAY, SEPTEMBER 14</p><h1>Good morning, Maya.</h1><p>Here’s what your conversations are moving forward.</p></div>
+      <div><p className="eyebrow">MONDAY, SEPTEMBER 14</p><h1>Good morning, Ahmed.</h1><p>Here’s what your conversations are moving forward.</p></div>
       <div className="pulse-card"><span><WandSparkles size={17} /> This week</span><strong>11 meetings</strong><p>4h 38m captured · 17 actions found</p></div>
     </section>
     <section className="insight-strip">
@@ -341,7 +341,7 @@ function PublicShare({ onExit }: { onExit: () => void }) {
   const [current, setCurrent] = useState(612);
   const [playing, setPlaying] = useState(false);
   useEffect(() => { if (!playing) return; const t = setInterval(() => setCurrent((v) => v + 1), 1000); return () => clearInterval(t); }, [playing]);
-  return <div className="public-page"><header><Logo /><span>Shared by Maya Chen at Northstar</span><button onClick={onExit}>Open workspace <ArrowUpRight size={15} /></button></header><main><div className="public-title"><span className="type-pill">Customer success</span><h1>Atlas Labs · Q3 implementation review</h1><p>September 14, 2026 · 1:02:08 · 8 people</p></div><div className="public-grid"><div><div className="video-card public-video"><div className="video-stage"><div className="video-grid">{people.map((p) => <div key={p.name} style={{ '--person': p.color } as React.CSSProperties}><span>{p.initials}</span><small>{p.name}</small></div>)}</div></div><div className="player"><button onClick={() => setPlaying(!playing)}>{playing ? <Pause size={18} /> : <Play size={18} fill="currentColor" />}</button><span>{fmt(current)}</span><input type="range" min="0" max="3728" value={current} onChange={(e) => setCurrent(Number(e.target.value))} /><span>1:02:08</span></div></div><div className="public-summary"><span>AI SUMMARY</span><h2>Launch stays on track for October 14</h2><p>Atlas and Northstar aligned on rollout readiness, training, and first-week support. The final security evidence bundle is the only critical dependency.</p><div className="public-points"><div><CheckCircle2 size={17} /><span>Pilot weekly completion reached <strong>78%</strong>.</span></div><div><CheckCircle2 size={17} /><span>SSO is validated in staging.</span></div><div><Gauge size={17} /><span>Final security approval expected Monday.</span></div></div></div></div><aside><h3>Key moments</h3>{[{ at: 612, title: 'Security timeline confirmed' }, { at: 1576, title: 'Adoption visibility prototype' }, { at: 2591, title: 'Launch support plan' }].map((x) => <button key={x.at} onClick={() => setCurrent(x.at)}><span><Play size={13} fill="currentColor" /></span><div><strong>{x.title}</strong><small>{fmt(x.at)}</small></div></button>)}<div className="shared-note"><Sparkles size={16} /><p>This is a shared Orbit recording. No account is required to view it.</p></div></aside></div></main></div>;
+  return <div className="public-page"><header><Logo /><span>Shared by Ahmed Chen at Northstar</span><button onClick={onExit}>Open workspace <ArrowUpRight size={15} /></button></header><main><div className="public-title"><span className="type-pill">Customer success</span><h1>Atlas Labs · Q3 implementation review</h1><p>September 14, 2026 · 1:02:08 · 8 people</p></div><div className="public-grid"><div><div className="video-card public-video"><div className="video-stage"><div className="video-grid">{people.map((p) => <div key={p.name} style={{ '--person': p.color } as React.CSSProperties}><span>{p.initials}</span><small>{p.name}</small></div>)}</div></div><div className="player"><button onClick={() => setPlaying(!playing)}>{playing ? <Pause size={18} /> : <Play size={18} fill="currentColor" />}</button><span>{fmt(current)}</span><input type="range" min="0" max="3728" value={current} onChange={(e) => setCurrent(Number(e.target.value))} /><span>1:02:08</span></div></div><div className="public-summary"><span>AI SUMMARY</span><h2>Launch stays on track for October 14</h2><p>Atlas and Northstar aligned on rollout readiness, training, and first-week support. The final security evidence bundle is the only critical dependency.</p><div className="public-points"><div><CheckCircle2 size={17} /><span>Pilot weekly completion reached <strong>78%</strong>.</span></div><div><CheckCircle2 size={17} /><span>SSO is validated in staging.</span></div><div><Gauge size={17} /><span>Final security approval expected Monday.</span></div></div></div></div><aside><h3>Key moments</h3>{[{ at: 612, title: 'Security timeline confirmed' }, { at: 1576, title: 'Adoption visibility prototype' }, { at: 2591, title: 'Launch support plan' }].map((x) => <button key={x.at} onClick={() => setCurrent(x.at)}><span><Play size={13} fill="currentColor" /></span><div><strong>{x.title}</strong><small>{fmt(x.at)}</small></div></button>)}<div className="shared-note"><Sparkles size={16} /><p>This is a shared Orbit recording. No account is required to view it.</p></div></aside></div></main></div>;
 }
 
 export default App;
