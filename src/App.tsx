@@ -153,7 +153,7 @@ function Sidebar({ view, onHome }: { view: string; onHome: () => void }) {
     <nav>{nav.map((item) => <button key={item.label} className={item.active ? 'active' : ''} onClick={item.label === 'My meetings' ? onHome : undefined}><item.icon size={18} /><span>{item.label}</span>{item.count && <b>{item.count}</b>}{item.badge && <em>{item.badge}</em>}</button>)}</nav>
     <div className="sidebar-bottom">
       <div className="usage"><div><Sparkles size={15} /> AI minutes</div><strong>214 <span>/ 300</span></strong><div className="meter"><i /></div><small>Resets in 12 days</small></div>
-      <button><Settings size={18} /> Settings</button>
+      <button><Settings size={18} /><span>Settings</span></button>
       <div className="user-row"><Avatar person={people[0]} small /><div><strong>Maya Chen</strong><small>Northstar Labs</small></div><MoreHorizontal size={18} /></div>
     </div>
   </aside>;
