@@ -7,7 +7,6 @@
           {
             "type": "command",
             "command": "node .codex/hooks/capture.mjs prompt",
-            "commandWindows": "node .codex\\hooks\\capture.mjs prompt",
             "timeout": 15,
             "statusMessage": "Capturing prompt"
           }
@@ -20,7 +19,6 @@
           {
             "type": "command",
             "command": "node .codex/hooks/capture.mjs response",
-            "commandWindows": "node .codex\\hooks\\capture.mjs response",
             "timeout": 15,
             "statusMessage": "Capturing final response"
           }
