@@ -46,3 +46,97 @@ button { cursor: pointer; }
 @media (max-width: 1050px) { .sidebar { width: 76px; }.sidebar .logo > span, .sidebar nav span, .sidebar nav b, .sidebar nav em, .capture-btn { display: none; }.sidebar .logo { justify-content: center; }.sidebar nav { margin-top: 35px; }.sidebar nav button, .sidebar-bottom > button { justify-content: center; }.usage, .user-row div, .user-row > svg { display: none; }.user-row { justify-content: center; }.main { margin-left: 76px; width: calc(100% - 76px); }.detail-layout { grid-template-columns: minmax(0, 1fr) 310px; } }
 @media (max-width: 800px) { .detail-layout, .public-grid { grid-template-columns: 1fr; }.right-rail { position: static; }.meeting-grid { grid-template-columns: 1fr; }.pulse-card { display: none; }.video-stage { aspect-ratio: 16/10; }.public-grid > aside { position: static; } }
 @media (max-width: 600px) { .sidebar { display: none; }.main { margin: 0; width: 100%; }.topbar { padding: 0 14px; }.invite { display: none; }.global-search { width: calc(100% - 48px); }.page { padding: 30px 17px 60px; }.insight-strip { align-items: flex-start; }.insight-strip button { display: none; }.control-actions label { display: none; }.meeting-grid { gap: 9px; }.detail-head, .detail-layout { padding-left: 16px; padding-right: 16px; }.detail-title { align-items: flex-start; }.detail-title .head-actions > button:first-child { display: none; }.video-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 1fr); }.video-stage { aspect-ratio: 4/5; }.prompt-grid { grid-template-columns: 1fr; }.public-page > header { padding: 0 16px; }.public-page > header > span { display: none; }.public-page main { padding: 30px 16px 60px; } }
+
+/* Readability pass: a sturdier UI face, brighter secondary text, and a 12px floor
+   for information users need to scan rather than purely decorative labels. */
+:root {
+  font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --muted: #a8b1b3;
+}
+
+body { font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+.logo,
+.welcome h1,
+.list-controls h2,
+.meeting-card h3,
+.detail-title h1,
+.summary-intro p,
+.summary-section h3,
+.rail-title h3,
+.ask-hero h2,
+.modal h2,
+.public-title h1,
+.public-summary h2,
+.public-grid > aside h3 { font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+.sidebar nav button { color: #b4bcbe; font-size: 13px; }
+.usage > div:first-child,
+.usage small,
+.user-row small,
+.pulse-card p,
+.insight-strip span,
+.list-controls > div > span,
+.filter-row button,
+.meeting-card > p,
+.mini-meta,
+.more-people,
+.sentiment,
+.back,
+.detail-title p,
+.tabs button,
+.panel-toolbar > button,
+.panel-toolbar label,
+.select-wrap select,
+.summary-section li,
+.ask-hero p,
+.prompt-grid button,
+.ask-input input,
+.answer > p,
+.modal p,
+.access-select select,
+.public-page > header > span,
+.public-title p,
+.public-summary > p,
+.public-points div { font-size: 12px; }
+
+.meeting-card > p,
+.summary-section li,
+.segment p,
+.answer > p,
+.public-summary > p,
+.public-points div { color: #b8c0c1; }
+.segment p { font-size: 13px; line-height: 1.7; }
+.segment-meta strong,
+.action p,
+.clip strong,
+.search-result strong,
+.public-grid > aside button strong { font-size: 11px; }
+.action p { color: #d0d5d4; line-height: 1.55; }
+.person-row strong { font-size: 11px; }
+.person-row small,
+.person-row > span,
+.clip small,
+.clip-hint,
+.search-result p,
+.search-result small,
+.public-grid > aside button small,
+.shared-note p { color: #929b9d; font-size: 10px; }
+.eyebrow,
+.summary-intro span,
+.public-summary > span,
+.type-pill,
+.recording-pill { font-size: 9px !important; }
+.player { font-size: 11px; }
+.rail-title button,
+.add-action,
+.modal-foot span,
+.modal-foot button,
+.copy-row code,
+.copy-row button { font-size: 10px; }
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
