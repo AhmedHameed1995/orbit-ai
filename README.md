@@ -4,6 +4,10 @@ Orbit is a product-focused rebuild of Fathom's post-meeting experience. It turns
 recorded conversation into a useful operating surface: searchable meetings, source-
 linked summaries, action items, transcript moments, clips, and a public share view.
 
+**Live:** https://orbit-meeting-intelligence.cheery-grape-5370.chatgpt.site
+
+**Anonymous share demo:** https://orbit-meeting-intelligence.cheery-grape-5370.chatgpt.site/?share=atlas-q3
+
 ## Product scope
 
 The recording bot is intentionally stubbed. The assignment explicitly allows this,
