@@ -94,6 +94,23 @@ const summaries: Record<string, { intro: string; sections: { title: string; bull
 const fmt = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
 const personFor = (name: string) => people.find((p) => p.name === name) || people[0];
 
+const copyText = async (text: string) => {
+  try {
+    if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); return true; }
+  } catch { /* blocked or unavailable; fall through to the legacy path */ }
+  try {
+    const area = document.createElement('textarea');
+    area.value = text;
+    area.style.position = 'fixed';
+    area.style.opacity = '0';
+    document.body.appendChild(area);
+    area.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(area);
+    return ok;
+  } catch { return false; }
+};
+
 function Avatar({ person, small = false }: { person: Person; small?: boolean }) {
   return <span className={`avatar ${small ? 'small' : ''}`} style={{ background: `${person.color}22`, color: person.color, borderColor: `${person.color}55` }}>{person.initials}</span>;
 }
@@ -196,8 +213,9 @@ function MeetingDetail({ meeting, onBack }: { meeting: Meeting; onBack: () => vo
     return () => clearInterval(timer);
   }, [playing, meeting.duration]);
 
-  const seek = (at: number) => { setCurrent(at); setToast(`Jumped to ${fmt(at)}`); setTimeout(() => setToast(''), 1800); };
-  const addClip = (segment: Segment) => { if (!clips.some((c) => c.at === segment.at)) setClips((list) => [...list, { id: Date.now(), at: segment.at, title: segment.text.split('. ')[0], length: 36 }]); setToast('Moment saved as a clip'); setTimeout(() => setToast(''), 1800); };
+  const notify = (message: string) => { setToast(message); setTimeout(() => setToast(''), 1800); };
+  const seek = (at: number) => { setCurrent(at); notify(`Jumped to ${fmt(at)}`); };
+  const addClip = (segment: Segment) => { if (!clips.some((c) => c.at === segment.at)) setClips((list) => [...list, { id: Date.now(), at: segment.at, title: segment.text.split('. ')[0], length: 36 }]); notify('Moment saved as a clip'); };
 
   return <div className="detail-page">
     <div className="detail-head">
@@ -215,8 +233,8 @@ function MeetingDetail({ meeting, onBack }: { meeting: Meeting; onBack: () => vo
           <div className="player"><button onClick={() => setPlaying(!playing)}>{playing ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}</button><span>{fmt(current)}</span><input aria-label="Playback position" type="range" min="0" max={meeting.duration} value={current} onChange={(e) => setCurrent(Number(e.target.value))} /><span>{fmt(meeting.duration)}</span><button className="speed">1×</button></div>
         </div>
         <div className="tabs">{(['Summary', 'Transcript', 'Ask Orbit'] as const).map((name) => <button key={name} className={tab === name ? 'active' : ''} onClick={() => setTab(name)}>{name === 'Ask Orbit' && <Sparkles size={15} />}{name}</button>)}</div>
-        {tab === 'Summary' && <Summary template={template} setTemplate={setTemplate} seek={seek} />}
-        {tab === 'Transcript' && <Transcript current={current} seek={seek} addClip={addClip} containerRef={transcriptRef} />}
+        {tab === 'Summary' && <Summary template={template} setTemplate={setTemplate} seek={seek} notify={notify} />}
+        {tab === 'Transcript' && <Transcript current={current} seek={seek} addClip={addClip} containerRef={transcriptRef} notify={notify} />}
         {tab === 'Ask Orbit' && <AskPanel seek={seek} />}
       </section>
       <aside className="right-rail">
@@ -230,18 +248,32 @@ function MeetingDetail({ meeting, onBack }: { meeting: Meeting; onBack: () => vo
   </div>;
 }
 
-function Summary({ template, setTemplate, seek }: { template: string; setTemplate: (v: string) => void; seek: (n: number) => void }) {
+function Summary({ template, setTemplate, seek, notify }: { template: string; setTemplate: (v: string) => void; seek: (n: number) => void; notify: (m: string) => void }) {
   const data = summaries[template];
+  const copySummary = async () => {
+    const body = [
+      `${template} summary`,
+      '',
+      data.intro,
+      '',
+      ...data.sections.flatMap((section) => [section.title, ...section.bullets.map((b) => `- ${b}`), '']),
+    ].join('\n').trim();
+    notify(await copyText(body) ? 'Summary copied to clipboard' : 'Your browser blocked the copy');
+  };
   return <div className="tab-panel summary-panel">
-    <div className="panel-toolbar"><div className="select-wrap"><Sparkles size={16} /><select value={template} onChange={(e) => setTemplate(e.target.value)}>{Object.keys(summaries).map((t) => <option key={t}>{t}</option>)}</select><ChevronDown size={15} /></div><button><Copy size={15} /> Copy summary</button></div>
+    <div className="panel-toolbar"><div className="select-wrap"><Sparkles size={16} /><select value={template} onChange={(e) => setTemplate(e.target.value)}>{Object.keys(summaries).map((t) => <option key={t}>{t}</option>)}</select><ChevronDown size={15} /></div><button onClick={copySummary}><Copy size={15} /> Copy summary</button></div>
     <div className="summary-intro"><span>AI SUMMARY</span><p>{data.intro}</p></div>
     {data.sections.map((section, sIndex) => <section className="summary-section" key={section.title}><h3>{section.title}</h3><ul>{section.bullets.map((bullet, index) => <li key={bullet}><span>{bullet}</span>{(sIndex + index) % 2 === 0 && <button onClick={() => seek([612, 1576, 2591][(sIndex + index) % 3])}><Play size={11} fill="currentColor" /> {fmt([612, 1576, 2591][(sIndex + index) % 3])}</button>}</li>)}</ul></section>)}
   </div>;
 }
 
-function Transcript({ current, seek, addClip, containerRef }: { current: number; seek: (n: number) => void; addClip: (s: Segment) => void; containerRef: React.RefObject<HTMLDivElement | null> }) {
+function Transcript({ current, seek, addClip, containerRef, notify }: { current: number; seek: (n: number) => void; addClip: (s: Segment) => void; containerRef: React.RefObject<HTMLDivElement | null>; notify: (m: string) => void }) {
+  const copyTranscript = async () => {
+    const body = transcript.map((segment) => `${fmt(segment.at)}  ${segment.speaker}: ${segment.text}`).join('\n');
+    notify(await copyText(body) ? 'Transcript copied to clipboard' : 'Your browser blocked the copy');
+  };
   return <div className="tab-panel transcript-panel" ref={containerRef}>
-    <div className="panel-toolbar"><label><Search size={15} /><input placeholder="Search this transcript" /></label><button><Clipboard size={15} /> Copy transcript</button></div>
+    <div className="panel-toolbar"><label><Search size={15} /><input placeholder="Search this transcript" /></label><button onClick={copyTranscript}><Clipboard size={15} /> Copy transcript</button></div>
     <div className="transcript-list">{transcript.map((segment) => { const p = personFor(segment.speaker); const active = current >= segment.at && current < segment.at + 90; return <div key={segment.at} className={`segment ${active ? 'active' : ''}`} onClick={() => seek(segment.at)}><button className="add-highlight" title="Save this moment" onClick={(e) => { e.stopPropagation(); addClip(segment); }}><Plus size={14} /></button><Avatar person={p} small /><div><div className="segment-meta"><strong>{segment.speaker}</strong><button>{fmt(segment.at)}</button>{segment.key && <span><Highlighter size={11} /> Key moment</span>}</div><p>{segment.text}</p></div></div>; })}</div>
   </div>;
 }
