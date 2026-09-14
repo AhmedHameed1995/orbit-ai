@@ -1,0 +1,31 @@
+{
+  "description": "Capture raw user prompts and final Codex responses for the 8x assignment.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .codex/hooks/capture.mjs prompt",
+            "commandWindows": "node .codex\\hooks\\capture.mjs prompt",
+            "timeout": 15,
+            "statusMessage": "Capturing prompt"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .codex/hooks/capture.mjs response",
+            "commandWindows": "node .codex\\hooks\\capture.mjs response",
+            "timeout": 15,
+            "statusMessage": "Capturing final response"
+          }
+        ]
+      }
+    ]
+  }
+}
